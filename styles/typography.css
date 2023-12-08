@@ -1,0 +1,149 @@
+.typoH1 {
+    font-family: inherit;
+    font-weight: 800;
+    line-height: 1.25rem;
+    font-size: 2.5rem;
+  }
+  
+  .typoH2 {
+    font-family: inherit;
+    font-weight: 800;
+    line-height: 1.3rem;
+    font-size: 2rem;
+  }
+  
+  .typoH3 {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .typoH4 {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.5rem;
+    font-size: 1.25rem;
+  }
+  
+  .typoH5 {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.5rem;
+    font-size: 1.125rem;
+  }
+  
+  .typoH6 {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: calc(28px / 18px);
+    font-size: 1.0625rem;
+  }
+  
+  .typoSubtitle1 {
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.5;
+    font-size: 1rem;
+  }
+  
+  .typoSubtitle2 {
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.571rem;
+    font-size: 0.875rem;
+  }
+  
+  .typoBody1 {
+    font-family: inherit;
+    line-height: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .typoBody2 {
+    font-family: inherit;
+    line-height: calc(22px / 14px);
+    font-size: 0.875rem;
+  }
+  
+  .typoCaption {
+    font-family: inherit;
+    line-height: 1.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .typoOverline {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  
+  .typoButton {
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.7rem;
+    font-size: 0.875rem;
+    text-transform: unset;
+  }
+  
+  @media (min-width: 600px) {
+    .typoH1 {
+      font-size: 3.25rem;
+    }
+    .typoH2 {
+      font-size: 2.5rem;
+    }
+    .typoH3 {
+      font-size: 1.625rem;
+    }
+    .typoH4,
+    .typoH5 {
+      font-size: 1.25rem;
+    }
+    .typoH6,
+    .typoButton {
+      font-size: 1.125rem;
+    }
+  }
+  
+  @media (min-width: 900px) {
+    .typoH1 {
+      font-size: 3.625rem;
+    }
+    .typoH2 {
+      font-size: 2.75rem;
+    }
+    .typoH3 {
+      font-size: 1.875rem;
+    }
+    .typoH4,
+    .typoH5 {
+      font-size: 1.5rem;
+    }
+    .typoH6,
+    .typoButton {
+      font-size: 1.125rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .typoH1 {
+      font-size: 4rem;
+    }
+    .typoH2 {
+      font-size: 3rem;
+    }
+    .typoH3 {
+      font-size: 2rem;
+    }
+    .typoH4,
+    .typoH5 {
+      font-size: 1.5rem;
+    }
+    .typoH6,
+    .typoButton {
+      font-size: 1.125rem;
+    }
+  }

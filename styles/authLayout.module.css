@@ -1,0 +1,31 @@
+.wrapper{
+    min-width: 100vw;
+    min-height: 100vh;
+    background: #FFEDC9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container{
+    min-height: 85vh;
+    width: 90%;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0px 4px 32.3px 0px rgba(0, 0, 0, 0.07);
+    display: flex;
+    overflow: hidden;
+}
+.left{
+    flex: 1.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.right{
+    flex: .9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+}

@@ -1,0 +1,45 @@
+.wrapper {
+  min-width: 18rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  display: flex;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  text-transform: capitalize;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.item:hover {
+  cursor: pointer;
+  background: var(--primary-low);
+}
+
+.item.active {
+  background: var(--primary-low);
+}
+
+
+
+
+/* for mobile */
+.drawerContainer {
+  height: 100%;
+}
+.drawerContainer aside {
+  height: 100%;
+}
