@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 
-const Iconify = ({...other}) => {
+const Iconify = ({ ...other }) => {
   return <Icon {...other} />;
 };
 

@@ -1,8 +1,13 @@
 "use client";
 import React from "react";
 import css from "@/styles/Post.module.css";
-import Box from "./Box";
+import Box from "../Box";
 import { Avatar, Flex, Typography } from "antd";
+import Image from "next/image";
+import LikeButton from "./LikeButton";
+import CommentButton from "./CommentButton";
+import ShareButton from "./ShareButton";
+import CommentSection from "./CommentSection";
 const Post = () => {
   return (
     <div className={css.wrapper}>
@@ -27,8 +32,34 @@ const Post = () => {
             hues of orange and pink.
           </Typography.Text>
 
-          {/* image */}
-          
+          {/* media */}
+          <div className={css.media}>
+            <Image
+              src="/images/post1.jpg"
+              alt="post"
+              style={{ objectFit: "cover" }}
+              fill
+            />
+          </div>
+
+          {/* actions */}
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ padding: ".5rem 0rem" }}
+          >
+            {/* left side like and comment */}
+            <Flex>
+              <LikeButton />
+              <CommentButton />
+            </Flex>
+
+            {/* right side share */}
+            <ShareButton />
+          </Flex>
+
+          {/* comments */}
+          <CommentSection />
         </div>
       </Box>
     </div>

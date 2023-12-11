@@ -3,6 +3,7 @@
   border-radius: 1rem;
   overflow: hidden;
   display: flex;
+  max-height: 88vh;
 }
 
 .container {

@@ -1,7 +1,10 @@
+// 'use client'
 import React from 'react'
 import css from '@/styles/Home.module.css'
-import PostGenerator from '@/components/PostGenerator'
-import Posts from '@/components/Posts'
+import PostGenerator from '@/components/Post/PostGenerator'
+import Posts from '@/components/Post/Posts'
+import PopularTrends from '@/components/PopularTrends'
+import FriendsSuggestion from '@/components/FriendsSuggestion'
 const HomeView = () => {
   return (
     <div className={css.wrapper}>
@@ -15,7 +18,9 @@ const HomeView = () => {
       </div>
 
       <div className={css.rightSide}>
-        Right side
+        <PopularTrends/>
+
+        <FriendsSuggestion/>
       </div>
     </div>
   )

@@ -1,0 +1,14 @@
+.wrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.title span {
+    color: gray;
+}
