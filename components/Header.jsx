@@ -28,12 +28,12 @@ const Header = () => {
           {/* actions */}
           <Flex gap={25} align="center">
             <ModeButton />
-            <UserButton />
+            <UserButton afterSignOutUrl="/" />
           </Flex>
         </div>
       </Box>
     </header>
-  )
+  );
 };
 
 export default Header;
