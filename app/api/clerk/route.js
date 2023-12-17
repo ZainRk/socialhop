@@ -54,6 +54,7 @@ export async function POST(req) {
 
   const email_address = email_addresses?.[0].email_address;
 
+  console.log("event received")
   if (eventType === "user.created") {
     try {
       await createUser({ id, first_name, last_name, email_address, image_url });

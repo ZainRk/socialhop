@@ -22,6 +22,7 @@ export const createUser = async (user) => {
         image_url,
       },
     });
+    console.log("New user created in db");
   } catch (e) {
     console.log(e);
     return {
@@ -31,7 +32,6 @@ export const createUser = async (user) => {
 
   console.log("User created in supabase");
 };
-
 
 export const updateUser = async (user) => {
   const { id, first_name, last_name, email_address, image_url } = user;
@@ -55,4 +55,4 @@ export const updateUser = async (user) => {
   }
 
   console.log("User updated in supabase");
-}
+};
