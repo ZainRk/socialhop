@@ -8,17 +8,26 @@
   position: relative;
 }
 
-@media (max-width: 750px) {
-  .container{
-    padding-bottom: 4rem;
-  }
-  .bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 1rem;
-    border-radius: 0 0 1rem 1rem;
-    display: none;
-  }
+.previewContainer{
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.remove{
+  z-index: 2;
+  right: 1rem;
+  top: 1rem;
+  background: #000;
+}
+
+.preview{
+  width: 100%;
+  border-radius: .5rem;
+  object-fit: cover;
+}
+
+.bottom{
+  width: 100%;
 }

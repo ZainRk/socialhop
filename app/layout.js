@@ -27,9 +27,7 @@ export default function RootLayout({ children }) {
     >
       <html lang="en">
         <body className={publicSans.className}>
-          <StyledComponentsRegistry>
-            {children}
-            </StyledComponentsRegistry>
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         </body>
       </html>
     </ClerkProvider>
