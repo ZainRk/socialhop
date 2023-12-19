@@ -2,7 +2,16 @@
 import React, { useRef, useState } from "react";
 import css from "@/styles/PostGenerator.module.css";
 import Box from "../Box";
-import { Avatar, Button, Flex, Image, Input, Typography, message } from "antd";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Image,
+  Input,
+  Spin,
+  Typography,
+  message,
+} from "antd";
 import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
 import useAction from "@/hooks/useAction";
@@ -10,15 +19,26 @@ import useAction from "@/hooks/useAction";
 const PostGenerator = () => {
   const imgInputRef = useRef(null);
   const vidInputRef = useRef(null);
-  const inputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState(null); // [image, video]
   const [messageApi, contextHolder] = message.useMessage();
+  const [postText, setPostText] = useState("");
 
   const { execute, error, isLoading } = useAction(createPost, {
-    // onSuccess: (data) => handleSuccess(data),
+    onSuccess: () => handleSuccess(),
     onError: () => showError("Something wrong happened. Try again!"),
   });
+  
+  const handleSuccess = () => {
+    setSelectedFile(null);
+    setFileType(null);
+    setPostText("");
+    messageApi.open({
+      type: "success",
+      content: "Post created successfully!",
+      duration: 4,
+    });
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -58,7 +78,6 @@ const PostGenerator = () => {
   };
 
   async function handleSubmitPost() {
-    const postText = inputRef.current.resizableTextArea.textArea.value;
     if ((postText === "" || !postText) && !selectedFile) {
       showError("Can't make an empty post");
       return;
@@ -69,116 +88,134 @@ const PostGenerator = () => {
   return (
     <>
       {contextHolder} {/* for toast message api */}
-      <div className={css.postGenWrapper}>
-        <Box className={css.container}>
-          <Flex gap={"1rem"} align={"flex-start"} vertical>
-            {/* avatar */}
+      <Spin
+        spinning={isLoading}
+        tip={
+          <Typography className="typoBody1" style={{ marginTop: "1rem" }}>
+            Uploading post...
+          </Typography>
+        }
+      >
+        <div className={css.postGenWrapper}>
+          <Box className={css.container}>
+            <Flex gap={"1rem"} align={"flex-start"} vertical>
+              {/* avatar */}
 
-            <Flex style={{ width: "100%" }} gap={"1rem"}>
-              <Avatar
-                src="/images/avatar.png"
-                style={{
-                  boxShadow: "var(--avatar-shadow)",
-                  width: "2.6rem",
-                  height: "2.6rem",
-                }}
-              />
+              <Flex style={{ width: "100%" }} gap={"1rem"}>
+                <Avatar
+                  src="/images/avatar.png"
+                  style={{
+                    boxShadow: "var(--avatar-shadow)",
+                    width: "2.6rem",
+                    height: "2.6rem",
+                  }}
+                />
 
-              <Input.TextArea
-                maxLength={100}
-                placeholder={"Share what you are thinking..."}
-                style={{ height: 80, resize: "none", flex: 1 }}
-                ref={inputRef}
-              />
-            </Flex>
+                <Input.TextArea
+                  maxLength={100}
+                  placeholder={"Share what you are thinking..."}
+                  style={{ height: 80, resize: "none", flex: 1 }}
+                  value={postText}
+                  onChange={(e) => setPostText(e.target.value)}
+                />
+              </Flex>
 
-            {/* file preview */}
-            {fileType && (
-              <div className={css.previewContainer}>
-                {/* remove button */}
-                <Button
-                  type="default"
-                  className={css.remove}
-                  style={{ position: "absolute" }}
-                >
-                  <Typography
-                    className="typoCaption"
-                    onClick={handleRemoveFile}
+              {/* file preview */}
+              {fileType && (
+                <div className={css.previewContainer}>
+                  {/* remove button */}
+                  <Button
+                    type="default"
+                    className={css.remove}
+                    style={{ position: "absolute" }}
                   >
-                    Remove
-                  </Typography>
+                    <Typography
+                      className="typoCaption"
+                      onClick={handleRemoveFile}
+                    >
+                      Remove
+                    </Typography>
+                  </Button>
+
+                  {/* media preview */}
+                  {fileType === "image" && (
+                    <Image
+                      src={selectedFile}
+                      className={css.preview}
+                      alt="preview"
+                      height={"350px"}
+                      width={"100%"}
+                    />
+                  )}
+                  {fileType === "video" && (
+                    <video
+                      className={css.preview}
+                      controls
+                      src={selectedFile}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* buttons Container */}
+              <Flex
+                align="center"
+                justify="space-between"
+                className={css.bottom}
+              >
+                {/* upload buttons */}
+                {/* image upload button */}
+                <Button
+                  type="text"
+                  style={{ background: "borderColor" }}
+                  onClick={() => imgInputRef.current.click()}
+                >
+                  <Flex align="center" gap={".5rem"}>
+                    <Iconify
+                      icon="solar:camera-linear"
+                      width="1.2rem"
+                      color="var(--primary)"
+                    />
+                    <Typography className="typoSubtitle2">Image</Typography>
+                  </Flex>
                 </Button>
 
-                {/* media preview */}
-                {fileType === "image" && (
-                  <Image
-                    src={selectedFile}
-                    className={css.preview}
-                    alt="preview"
-                    height={"350px"}
-                    width={"100%"}
-                  />
-                )}
-                {fileType === "video" && (
-                  <video className={css.preview} controls src={selectedFile} />
-                )}
-              </div>
-            )}
+                {/* video upload button */}
+                <Button
+                  type="text"
+                  style={{ background: "borderColor" }}
+                  onClick={() => vidInputRef.current.click()}
+                >
+                  <Flex align="center" gap={".5rem"}>
+                    <Iconify
+                      icon="gridicons:video"
+                      width="1.2rem"
+                      color="#5856D6"
+                    />
+                    <Typography className="typoSubtitle2">Video</Typography>
+                  </Flex>
+                </Button>
 
-            {/* buttons Container */}
-            <Flex align="center" justify="space-between" className={css.bottom}>
-              {/* upload buttons */}
-              {/* image upload button */}
-              <Button
-                type="text"
-                style={{ background: "borderColor" }}
-                onClick={() => imgInputRef.current.click()}
-              >
-                <Flex align="center" gap={".5rem"}>
-                  <Iconify
-                    icon="solar:camera-linear"
-                    width="1.2rem"
-                    color="var(--primary)"
-                  />
-                  <Typography className="typoSubtitle2">Image</Typography>
-                </Flex>
-              </Button>
-
-              {/* video upload button */}
-              <Button
-                type="text"
-                style={{ background: "borderColor" }}
-                onClick={() => vidInputRef.current.click()}
-              >
-                <Flex align="center" gap={".5rem"}>
-                  <Iconify
-                    icon="gridicons:video"
-                    width="1.2rem"
-                    color="#5856D6"
-                  />
-                  <Typography className="typoSubtitle2">Video</Typography>
-                </Flex>
-              </Button>
-
-              <Button
-                type="primary"
-                style={{ marginLeft: "auto" }}
-                onClick={handleSubmitPost}
-              >
-                <Flex align="center" gap={".5rem"}>
-                  <Iconify icon="iconamoon:send-fill" width="1.2rem" />
-                  <Typography
-                    className="typoSubtitle2"
-                    style={{ color: "white" }}
-                  >
-                    Post
-                  </Typography>
-                </Flex>
-              </Button>
+                <Button
+                  type="primary"
+                  style={{ marginLeft: "auto" }}
+                  onClick={handleSubmitPost}
+                >
+                  <Flex align="center" gap={".5rem"}>
+                    <Iconify icon="iconamoon:send-fill" width="1.2rem" />
+                    <Typography
+                      className="typoSubtitle2"
+                      style={{ color: "white" }}
+                    >
+                      Post
+                    </Typography>
+                  </Flex>
+                </Button>
+              </Flex>
             </Flex>
-          </Flex>
-        </Box>
-      </div>
+          </Box>
+        </div>
+      </Spin>
       {/* make an input to only accept img files and max number of files as 1 */}
       <input
         type="file"

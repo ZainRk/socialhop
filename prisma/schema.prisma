@@ -13,6 +13,7 @@ model Post {
     media     String?
     author    User    @relation(fields: [authorId], references: [id])
     authorId  String
+    cld_id    String?
 }
 
 model User {
