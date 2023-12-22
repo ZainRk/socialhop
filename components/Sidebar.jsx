@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "./Box";
 import css from "@/styles/Sidebar.module.css";
 import { sidebarRoutes } from "@/lib/sidebar";
@@ -12,6 +12,10 @@ import SidebarContainer from "./SidebarContainer";
 import { useSettingsContext } from "@/context/settings/settings-context";
 const Sidebar = () => {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     settings: { isSidebarOpen },
@@ -34,32 +38,37 @@ const Sidebar = () => {
   };
 
   return (
-    <SidebarContainer
-      isDrawrOpen={isSidebarOpen}
-      setIsDrawerOpen={handleDrawerClose}
-    >
-      <aside className={css.wrapper}>
-        <Box className={css.container}>
-          {sidebarRoutes.map((route, index) => (
-            <Link
-              href={route.route}
-              key={index}
-              className={cx(css.item, isActive(route))}
-            >
-              {/* icon */}
-              <Typography style={{ color: activeColor(route) }}>
-                <Iconify icon={route.icon} width={"20px"} />
-              </Typography>
+    mounted && (
+      <SidebarContainer
+        isDrawrOpen={isSidebarOpen}
+        setIsDrawerOpen={handleDrawerClose}
+      >
+        <div className={css.wrapper}>
+          <Box className={css.container}>
+            {sidebarRoutes.map((route, index) => (
+              <Link
+                href={route.route}
+                key={index}
+                className={cx(css.item, isActive(route))}
+              >
+                {/* icon */}
+                <Typography style={{ color: activeColor(route) }}>
+                  <Iconify icon={route.icon} width={"20px"} />
+                </Typography>
 
-              {/* name */}
-              <Typography className="typoSubtitle2" style={{ color: activeColor(route) }}>
-                {route.name}
-              </Typography>
-            </Link>
-          ))}
-        </Box>
-      </aside>
-    </SidebarContainer>
+                {/* name */}
+                <Typography
+                  className="typoSubtitle2"
+                  style={{ color: activeColor(route) }}
+                >
+                  {route.name}
+                </Typography>
+              </Link>
+            ))}
+          </Box>
+        </div>
+      </SidebarContainer>
+    )
   );
 };
 

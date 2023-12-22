@@ -14,6 +14,17 @@ model Post {
     author    User    @relation(fields: [authorId], references: [id])
     authorId  String
     cld_id    String?
+    createdAt DateTime @default(now())
+    likes     Like[]
+}
+
+model Like {
+    id        Int     @id @default(autoincrement())
+    post      Post    @relation(fields: [postId], references: [id])
+    postId    Int
+    author    User    @relation(fields: [authorId], references: [id])
+    authorId  String
+    createdAt DateTime @default(now())
 }
 
 model User {
@@ -23,4 +34,5 @@ model User {
     last_name     String?
     image_url     String?
     posts         Post[]
+    likes         Like[]
 }

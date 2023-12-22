@@ -1,13 +1,76 @@
-import { Flex } from 'antd'
-import React from 'react'
-import Post from './Post'
+"use client";
+import { Flex, Spin, Typography } from "antd";
+import React, { useEffect } from "react";
+import Post from "./Post";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getPosts } from "@/actions/post";
+import { useInView } from "react-intersection-observer";
 
 const Posts = () => {
-  return (
-    <Flex vertical gap={'1rem'}>
-        <Post/>
-    </Flex>
-  )
-}
+  // to know when the last element is in view
+  const { ref, inView } = useInView();
 
-export default Posts
+  const {
+    data,
+    error,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isSuccess,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: ({ pageParam = "" }) => getPosts(pageParam),
+    getNextPageParam: (lastPage) => {
+      return lastPage?.metaData?.lastCursor;
+    },
+  });
+
+  useEffect(() => {
+    // if the last element is in view and there is a next page, fetch the next page
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, inView, fetchNextPage]);
+
+  const checkLastViewRef = (index, page) => {
+    if (index === page.data.length - 1) {
+      return true;
+    } else return false;
+  };
+
+  if (error) {
+    return <Typography>Something went wrong</Typography>;
+  }
+
+  if (isSuccess) {
+    return (
+      <Flex vertical gap={"1rem"}>
+        
+        {data?.pages?.map((page) =>
+          page?.data?.map((post, index) =>
+            checkLastViewRef(index, page) ? (
+              <div ref={ref} key={post?.id}>
+                <Post data={post} />
+              </div>
+            ) : (
+              <div key={post?.id}>
+                <Post data={post} />
+              </div>
+            )
+          )
+        )}
+
+        {(isLoading || isFetchingNextPage) && (
+          <Flex vertical align="center" gap={"large"}>
+            <Spin />
+            <Typography>Loading...</Typography>
+          </Flex>
+        )}
+
+      </Flex>
+    );
+  }
+};
+
+export default Posts;

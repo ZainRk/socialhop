@@ -14,7 +14,7 @@ import {
 } from "antd";
 import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
-import useAction from "@/hooks/useAction";
+import { useMutation } from "@tanstack/react-query";
 
 const PostGenerator = () => {
   const imgInputRef = useRef(null);
@@ -24,11 +24,12 @@ const PostGenerator = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [postText, setPostText] = useState("");
 
-  const { execute, error, isLoading } = useAction(createPost, {
-    onSuccess: () => handleSuccess(),
+  const { mutate: execute, isPending } = useMutation({
+    mutationFn: (data) => createPost(data),
+    onSuccess: () => handleSuccess() ,
     onError: () => showError("Something wrong happened. Try again!"),
   });
-  
+
   const handleSuccess = () => {
     setSelectedFile(null);
     setFileType(null);
@@ -77,19 +78,19 @@ const PostGenerator = () => {
     });
   };
 
-  async function handleSubmitPost() {
+  function handleSubmitPost() {
     if ((postText === "" || !postText) && !selectedFile) {
       showError("Can't make an empty post");
       return;
     }
     // don't forget to tell about the next.config.js file where we have set the limit of 5mb
-    await execute({ postText, media: selectedFile });
+    execute({ postText, media: selectedFile });
   }
   return (
     <>
       {contextHolder} {/* for toast message api */}
       <Spin
-        spinning={isLoading}
+        spinning={isPending}
         tip={
           <Typography className="typoBody1" style={{ marginTop: "1rem" }}>
             Uploading post...
