@@ -1,4 +1,3 @@
-// 'use client'
 import React from 'react'
 import css from '@/styles/Home.module.css'
 import PostGenerator from '@/components/Post/PostGenerator'

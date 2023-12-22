@@ -8,39 +8,58 @@ import LikeButton from "./LikeButton";
 import CommentButton from "./CommentButton";
 import ShareButton from "./ShareButton";
 import CommentSection from "./CommentSection";
-const Post = () => {
+import dayjs from "dayjs";
+import { getFileTypeFromUrl } from "@/utils";
+import { updatePostLike } from "@/actions/post";
+const Post = ({ data }) => {
+  function handleLikeButtonClick() {
+    updatePostLike(data?.id, "add");
+  }
+
   return (
     <div className={css.wrapper}>
       <Box>
         <div className={css.container}>
           {/* profile info */}
           <Flex gap={".5rem"} align="center">
-            <Avatar size={40} src={"https://i.pravatar.cc/300"} />
+            <Avatar size={40} src={data?.author?.image_url} />
 
             {/* name and post date */}
             <Flex vertical>
-              <Typography className="typoSubtitle2">Jaydon Frankie</Typography>
+              <Typography className="typoSubtitle2">
+                {data?.author?.first_name} {data?.author?.last_name}
+              </Typography>
               <Typography.Text className="typoCaption" type="secondary" strong>
-                28 Nov 2023
+                {dayjs(data?.created_at).format("DD MMM YYYY")}
               </Typography.Text>
             </Flex>
           </Flex>
 
           {/* caption */}
           <Typography.Text className="typoBody2">
-            The sun slowly set over the horizon, painting the sky in vibrant
-            hues of orange and pink.
+            {data?.postText}
           </Typography.Text>
 
           {/* media */}
-          <div className={css.media}>
-            <Image
-              src="/images/post1.jpg"
-              alt="post"
-              style={{ objectFit: "cover" }}
-              fill
-            />
-          </div>
+          {getFileTypeFromUrl(data?.media) === "image" && (
+            <div className={css.media}>
+              <Image
+                src={data?.media}
+                alt="post"
+                style={{ objectFit: "cover" }}
+                fill
+              />
+            </div>
+          )}
+          {getFileTypeFromUrl(data?.media) === "video" && (
+            <div className={css.media}>
+              <video
+                src={data?.media}
+                controls
+                style={{ width: "100%", height: "100%" }}
+              />
+            </div>
+          )}
 
           {/* actions */}
           <Flex
@@ -50,7 +69,10 @@ const Post = () => {
           >
             {/* left side like and comment */}
             <Flex>
-              <LikeButton />
+              <LikeButton
+                handleButtonClick={handleLikeButtonClick}
+                likes={data?.likes}
+              />
               <CommentButton />
             </Flex>
 
