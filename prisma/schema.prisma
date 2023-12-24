@@ -8,31 +8,43 @@ generator client {
 }
 
 model Post {
-    id        Int     @id @default(autoincrement())
+    id        Int       @id @default(autoincrement())
     postText  String?
     media     String?
-    author    User    @relation(fields: [authorId], references: [id])
+    author    User      @relation(fields: [authorId], references: [id])
     authorId  String
     cld_id    String?
-    createdAt DateTime @default(now())
+    createdAt DateTime  @default(now())
     likes     Like[]
+    comments  Comment[]
 }
 
 model Like {
-    id        Int     @id @default(autoincrement())
-    post      Post    @relation(fields: [postId], references: [id])
+    id        Int      @id @default(autoincrement())
+    post      Post     @relation(fields: [postId], references: [id])
     postId    Int
-    author    User    @relation(fields: [authorId], references: [id])
+    author    User     @relation(fields: [authorId], references: [id])
     authorId  String
+    createdAt DateTime @default(now())
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    comment   String?
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    post      Post     @relation(fields: [postId], references: [id])
+    postId    Int
     createdAt DateTime @default(now())
 }
 
 model User {
-    id            String  @id
-    email_address String? @unique
+    id            String    @id
+    email_address String?   @unique
     first_name    String?
     last_name     String?
     image_url     String?
     posts         Post[]
     likes         Like[]
+    comments      Comment[]
 }

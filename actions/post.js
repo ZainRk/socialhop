@@ -34,9 +34,7 @@ export const createPost = async (post) => {
     };
   } catch (e) {
     console.log(e);
-    return {
-      error: "Failed to save new post in db",
-    };
+    throw Error("Failed to create post");
   }
 };
 
@@ -48,6 +46,11 @@ export const getPosts = async (lastCursor) => {
       include: {
         author: true,
         likes: true,
+        comments: {
+          include: {
+            author: true,
+          }
+        },
       },
       take,
       ...(lastCursor && {
@@ -62,16 +65,13 @@ export const getPosts = async (lastCursor) => {
     });
 
     if (posts.length === 0) {
-      return (
-        {
-          data: [],
-          metaData: {
-            lastCursor: null,
-            hasMore: false,
-          },
+      return {
+        data: [],
+        metaData: {
+          lastCursor: null,
+          hasMore: false,
         },
-        { status: 200 }
-      );
+      };
     }
     const lastPostInResults = posts[posts.length - 1];
     const cursor = lastPostInResults?.id;
@@ -92,12 +92,7 @@ export const getPosts = async (lastCursor) => {
     };
   } catch (e) {
     console.log(e);
-    return (
-      {
-        error: "Failed to get posts",
-      },
-      { status: 400 }
-    );
+    throw Error("Failed to fetch posts");
   }
 };
 
@@ -139,11 +134,11 @@ export const updatePostLike = async (postId, type) => {
             id: like.id,
           },
         });
+        console.log("like deleted");
       }
-    } 
+    }
     // if user has not already liked the post
     else {
-
       // if user is trying to unlike the post, return the post
       if (type === "unlike") {
         return {
@@ -166,6 +161,7 @@ export const updatePostLike = async (postId, type) => {
             },
           },
         });
+        console.log("like created");
       }
     }
     const updatedPost = await db.post.findUnique({
@@ -181,10 +177,35 @@ export const updatePostLike = async (postId, type) => {
     };
   } catch (e) {
     console.log(e);
-    return {
-      error: "Failed to update post like",
-    };
+    throw Error("Failed to update post like");
   }
+};
 
-  revalidatePath('/')
+export const addComment = async (postId, comment) => {
+  console.log(postId, comment);
+  try {
+    const { id: userId } = await currentUser();
+    const newComment = await db.comment.create({
+      data: {
+        comment,
+        post: {
+          connect: {
+            id: postId,
+          },
+        },
+        author: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+    console.log("comment created", newComment);
+    return {
+      data: newComment,
+    };
+  } catch (e) {
+    console.log(e);
+    throw Error("Failed to add comment");
+  }
 };

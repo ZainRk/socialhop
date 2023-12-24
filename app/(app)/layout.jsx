@@ -5,6 +5,7 @@ import ThemeProvider from "@/lib/ThemeProvider";
 import Box from "@/components/Box";
 import Sidebar from "@/components/Sidebar";
 import { SettingsContextProvider } from "@/context/settings/settings-provider";
+import { Toaster } from "react-hot-toast";
 const HomeLayout = ({ children }) => {
   return (
     <SettingsContextProvider>
@@ -22,6 +23,7 @@ const HomeLayout = ({ children }) => {
             </div>
           </div>
         </Box>
+        <Toaster />
       </ThemeProvider>
     </SettingsContextProvider>
   );
