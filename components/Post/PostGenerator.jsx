@@ -10,18 +10,17 @@ import {
   Input,
   Spin,
   Typography,
-  message,
 } from "antd";
 import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
 import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const PostGenerator = () => {
   const imgInputRef = useRef(null);
   const vidInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState(null); // [image, video]
-  const [messageApi, contextHolder] = message.useMessage();
   const [postText, setPostText] = useState("");
 
   const { mutate: execute, isPending } = useMutation({
@@ -34,11 +33,7 @@ const PostGenerator = () => {
     setSelectedFile(null);
     setFileType(null);
     setPostText("");
-    messageApi.open({
-      type: "success",
-      content: "Post created successfully!",
-      duration: 4,
-    });
+    toast.success("Post created successfully!");
   };
 
   const handleFileChange = async (e) => {
@@ -71,11 +66,7 @@ const PostGenerator = () => {
   };
 
   const showError = (content = "Something went wrong! Try again.") => {
-    messageApi.open({
-      type: "error",
-      content,
-      duration: 4,
-    });
+    toast.error(content);
   };
 
   function handleSubmitPost() {
@@ -88,7 +79,6 @@ const PostGenerator = () => {
   }
   return (
     <>
-      {contextHolder} {/* for toast message api */}
       <Spin
         spinning={isPending}
         tip={

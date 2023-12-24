@@ -1,6 +1,6 @@
 export const getFileTypeFromUrl = (url) => {
   if (url === null || url === undefined) return "unknown";
-  
+
   const extension = url.split(".").pop();
 
   switch (extension) {
@@ -15,5 +15,19 @@ export const getFileTypeFromUrl = (url) => {
       return "video";
     default:
       return "unknown";
+  }
+};
+
+export const updateQueryCacheLikes = (
+  postLikes,
+  postId,
+  userId,
+  actionType
+) => {
+  if (actionType === "like") {
+    return [...postLikes, { authorId: userId, postId }];
+  }
+  else {
+    return postLikes.filter((like) => like.authorId !== userId);
   }
 };

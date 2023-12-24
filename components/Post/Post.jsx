@@ -10,12 +10,7 @@ import ShareButton from "./ShareButton";
 import CommentSection from "./CommentSection";
 import dayjs from "dayjs";
 import { getFileTypeFromUrl } from "@/utils";
-import { updatePostLike } from "@/actions/post";
 const Post = ({ data }) => {
-  function handleLikeButtonClick() {
-    updatePostLike(data?.id, "add");
-  }
-
   return (
     <div className={css.wrapper}>
       <Box>
@@ -69,11 +64,8 @@ const Post = ({ data }) => {
           >
             {/* left side like and comment */}
             <Flex>
-              <LikeButton
-                handleButtonClick={handleLikeButtonClick}
-                likes={data?.likes}
-              />
-              <CommentButton />
+              <LikeButton postId={data?.id} likes={data?.likes} />
+              <CommentButton comments={data?.comments?.length} />
             </Flex>
 
             {/* right side share */}
@@ -81,7 +73,11 @@ const Post = ({ data }) => {
           </Flex>
 
           {/* comments */}
-          <CommentSection />
+          <CommentSection
+            comments={data?.comments}
+            expanded={false}
+            postId={data?.id}
+          />
         </div>
       </Box>
     </div>
