@@ -15,6 +15,7 @@ import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { checkPostForTrends } from "@/utils";
 
 const PostGenerator = () => {
   const imgInputRef = useRef(null);
@@ -22,7 +23,6 @@ const PostGenerator = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState(null); // [image, video]
   const [postText, setPostText] = useState("");
-
   const { mutate: execute, isPending } = useMutation({
     mutationFn: (data) => createPost(data),
     onSuccess: () => handleSuccess() ,

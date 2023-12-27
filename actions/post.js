@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
 import { uploadFile } from "./uploadFile";
 import { revalidatePath } from "next/cache";
+import { checkPostForTrends } from "@/utils";
 
 export const createPost = async (post) => {
   const { postText, media } = post;
@@ -29,6 +30,12 @@ export const createPost = async (post) => {
         },
       },
     });
+
+    const trends = checkPostForTrends(postText);
+    if (trends.length > 0) {
+      createTrends(trends, newPost.id);
+    }
+
     return {
       data: newPost,
     };
@@ -49,7 +56,7 @@ export const getPosts = async (lastCursor) => {
         comments: {
           include: {
             author: true,
-          }
+          },
         },
       },
       take,
@@ -182,7 +189,6 @@ export const updatePostLike = async (postId, type) => {
 };
 
 export const addComment = async (postId, comment) => {
-  console.log(postId, comment);
   try {
     const { id: userId } = await currentUser();
     const newComment = await db.comment.create({
@@ -205,7 +211,24 @@ export const addComment = async (postId, comment) => {
       data: newComment,
     };
   } catch (e) {
-    console.log(e);
-    throw Error("Failed to add comment");
+    throw e;
+  }
+};
+
+export const createTrends = async (trends, postId) => {
+  console.log(postId, trends);
+  try {
+    const newTrends = await db.trend.createMany({
+      data: trends.map((trend) => ({
+        name: trend.toLowerCase(),
+        postId: postId,
+      })),
+    });
+    console.log("trends created", newTrends);
+    return {
+      data: newTrends,
+    };
+  } catch (e) {
+    throw e;
   }
 };

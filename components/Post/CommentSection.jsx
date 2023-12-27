@@ -1,6 +1,6 @@
 "use client";
 import { Avatar, Button, Flex, Typography } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import css from "@/styles/Post.module.css";
 import Box from "../Box";
 import { SettingsContext } from "@/context/settings/settings-context";
@@ -8,12 +8,35 @@ import cx from "classnames";
 import CommentInput from "./CommentInput";
 import Iconify from "../Iconify";
 import dayjs from "dayjs";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { animateScroll } from "react-scroll";
+
+
 const EXPAND_ICONS = {
   true: "ic:outline-expand-less",
   false: "ic:outline-expand-more",
 };
 const CommentSection = ({ comments, postId }) => {
   const [expanded, setExpanded] = useState(false);
+  const [parent] = useAutoAnimate();
+  useEffect(() => {
+    if (expanded) {
+      // scroll to the bottom of parent
+      animateScroll.scrollToBottom({
+        containerId: "comments-container",
+        smooth: true,
+        duration: 300,
+      });
+    }
+  }, [expanded, comments]);
+
+  const checkIsPostingComment = (index) => {
+    if (index === comments?.length - 1 && postingComment) {
+      return true;
+    } else {
+      false;
+    }
+  };
 
   return (
     <Flex vertical gap={"1rem"}>
@@ -28,19 +51,35 @@ const CommentSection = ({ comments, postId }) => {
         )}
         {/* comments */}
         {comments?.length > 0 && (
-          <Flex vertical gap={".5rem"} className={css.commentsContainer}>
+          <Flex
+            vertical
+            gap={".5rem"}
+            className={css.commentsContainer}
+            ref={parent}
+            id="comments-container"
+          >
             {!expanded ? (
-              <Comment data={comments[comments?.length - 1]} />
+              <Comment
+                data={comments[comments?.length - 1]}
+                postingComment={() => checkIsPostingComment(0)}
+              />
             ) : (
-              comments?.map((comment) => (
-                <Comment key={comment?.id} data={comment} />
+              comments?.map((comment, index) => (
+                <Comment
+                  key={index}
+                  data={comment}
+                  postingComment={() => checkIsPostingComment(index)}
+                />
               ))
             )}
           </Flex>
         )}
       </>
 
-      <CommentInput postId={postId} setExpanded={setExpanded}/>
+      <CommentInput
+        postId={postId}
+        setExpanded={setExpanded}
+      />
     </Flex>
   );
 };
