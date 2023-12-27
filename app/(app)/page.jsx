@@ -17,7 +17,7 @@ const HomePage = async () => {
   });
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <HomeView />;
+      <HomeView />
     </HydrationBoundary>
   );
 };

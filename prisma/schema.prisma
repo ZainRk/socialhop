@@ -17,6 +17,7 @@ model Post {
     createdAt DateTime  @default(now())
     likes     Like[]
     comments  Comment[]
+    trends    Trend[]
 }
 
 model Like {
@@ -47,4 +48,11 @@ model User {
     posts         Post[]
     likes         Like[]
     comments      Comment[]
+}
+
+model Trend {
+    id     Int    @id @default(autoincrement())
+    name   String
+    post   Post   @relation(fields: [postId], references: [id])
+    postId Int
 }

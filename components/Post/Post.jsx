@@ -32,7 +32,7 @@ const Post = ({ data }) => {
 
           {/* caption */}
           <Typography.Text className="typoBody2">
-            {data?.postText}
+            <div dangerouslySetInnerHTML={{ __html: (data?.postText).replace(/\n/g, '<br/>') }}></div>
           </Typography.Text>
 
           {/* media */}

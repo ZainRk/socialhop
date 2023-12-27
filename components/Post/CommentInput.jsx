@@ -1,5 +1,5 @@
 import { Avatar, Button, Flex, Input } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Iconify from "../Iconify";
 import { addComment } from "@/actions/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,9 +11,7 @@ const CommentInput = ({ postId, setExpanded }) => {
   const queryClient = useQueryClient();
   const { user } = useUser();
   const { isPending, mutate } = useMutation({
-    mutationFn: (postId) => {
-      addComment(postId, value);
-    },
+    mutationFn: (postId) => addComment(postId, value),
 
     // This function will be run just before the mutation function
     onMutate: async () => {
@@ -61,6 +59,7 @@ const CommentInput = ({ postId, setExpanded }) => {
       return { previousPosts };
     },
     onError: (err, variables, context) => {
+      console.log("this executed");
       toast.error("Something wrong happened. Try again!");
       queryClient.setQueryData(["posts"], context.previousPosts);
     },
@@ -71,6 +70,7 @@ const CommentInput = ({ postId, setExpanded }) => {
       setValue("");
     },
   });
+
   return (
     <Flex gap={"1rem"} align="center">
       {/* avatar */}
