@@ -216,7 +216,6 @@ export const addComment = async (postId, comment) => {
 };
 
 export const createTrends = async (trends, postId) => {
-  console.log(postId, trends);
   try {
     const newTrends = await db.trend.createMany({
       data: trends.map((trend) => ({

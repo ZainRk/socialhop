@@ -11,7 +11,7 @@ model Post {
     id        Int       @id @default(autoincrement())
     postText  String?
     media     String?
-    author    User      @relation(fields: [authorId], references: [id])
+    author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId  String
     cld_id    String?
     createdAt DateTime  @default(now())
@@ -22,9 +22,9 @@ model Post {
 
 model Like {
     id        Int      @id @default(autoincrement())
-    post      Post     @relation(fields: [postId], references: [id])
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId    Int
-    author    User     @relation(fields: [authorId], references: [id])
+    author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId  String
     createdAt DateTime @default(now())
 }
@@ -32,9 +32,9 @@ model Like {
 model Comment {
     id        Int      @id @default(autoincrement())
     comment   String?
-    author    User     @relation(fields: [authorId], references: [id])
+    author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId  String
-    post      Post     @relation(fields: [postId], references: [id])
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId    Int
     createdAt DateTime @default(now())
 }
@@ -53,6 +53,6 @@ model User {
 model Trend {
     id     Int    @id @default(autoincrement())
     name   String
-    post   Post   @relation(fields: [postId], references: [id])
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId Int
 }

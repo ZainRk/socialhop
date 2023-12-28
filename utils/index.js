@@ -33,9 +33,11 @@ export const updateQueryCacheLikes = (
 
 export const checkPostForTrends = (postText = "") => {
   // 1. split post text into words that have hashtags
-  const firstSplit = postText.split(" ").filter((word) => word.startsWith("#"));
+  const firstSplit = postText
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.startsWith("#"));
   let res = firstSplit;
-
   // 2. check if there are any words that have multiple hashtags
   firstSplit.map((word) => {
     const secondSplit = word.split("#");
@@ -45,6 +47,5 @@ export const checkPostForTrends = (postText = "") => {
       );
     }
   });
-  
   return res;
 };

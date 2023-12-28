@@ -4,6 +4,7 @@ import StyledComponentsRegistry from "@/lib/AntRegistry";
 import "./globals.css";
 import "@/styles/typography.css";
 import QueryProvider from "@/lib/QueryProvider";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const publicSans = Public_Sans({
   subsets: ["latin"],

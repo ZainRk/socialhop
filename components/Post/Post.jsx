@@ -10,6 +10,7 @@ import ShareButton from "./ShareButton";
 import CommentSection from "./CommentSection";
 import dayjs from "dayjs";
 import { getFileTypeFromUrl } from "@/utils";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const Post = ({ data }) => {
   return (
     <div className={css.wrapper}>
@@ -32,18 +33,30 @@ const Post = ({ data }) => {
 
           {/* caption */}
           <Typography.Text className="typoBody2">
-            <div dangerouslySetInnerHTML={{ __html: (data?.postText).replace(/\n/g, '<br/>') }}></div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: (data?.postText).replace(/\n/g, "<br/>"),
+              }}
+            ></div>
           </Typography.Text>
 
           {/* media */}
           {getFileTypeFromUrl(data?.media) === "image" && (
             <div className={css.media}>
-              <Image
+              {/* <Image
                 src={data?.media}
                 alt="post"
                 style={{ objectFit: "cover" }}
                 fill
+              /> */}
+              <LazyLoadImage
+                width={"100%"}
+                height={"100%"}
+                src={data?.media}
+                alt="post"
+                effect="blur"
               />
+              
             </div>
           )}
           {getFileTypeFromUrl(data?.media) === "video" && (
