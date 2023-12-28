@@ -2,20 +2,13 @@
 import React, { useRef, useState } from "react";
 import css from "@/styles/PostGenerator.module.css";
 import Box from "../Box";
-import {
-  Avatar,
-  Button,
-  Flex,
-  Image,
-  Input,
-  Spin,
-  Typography,
-} from "antd";
+import { Avatar, Button, Flex, Image, Input, Spin, Typography } from "antd";
 import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { checkPostForTrends } from "@/utils";
+import { useUser } from "@clerk/nextjs";
 
 const PostGenerator = () => {
   const imgInputRef = useRef(null);
@@ -23,9 +16,13 @@ const PostGenerator = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState(null); // [image, video]
   const [postText, setPostText] = useState("");
+  const queryClient = useQueryClient();
   const { mutate: execute, isPending } = useMutation({
     mutationFn: (data) => createPost(data),
-    onSuccess: () => handleSuccess() ,
+    onSuccess: () => {
+      handleSuccess();
+      queryClient.invalidateQueries("posts");
+    },
     onError: () => showError("Something wrong happened. Try again!"),
   });
 
@@ -77,6 +74,8 @@ const PostGenerator = () => {
     // don't forget to tell about the next.config.js file where we have set the limit of 5mb
     execute({ postText, media: selectedFile });
   }
+
+  const { user } = useUser();
   return (
     <>
       <Spin
@@ -94,7 +93,7 @@ const PostGenerator = () => {
 
               <Flex style={{ width: "100%" }} gap={"1rem"}>
                 <Avatar
-                  src="/images/avatar.png"
+                  src={user?.imageUrl}
                   style={{
                     boxShadow: "var(--avatar-shadow)",
                     width: "2.6rem",
@@ -103,7 +102,7 @@ const PostGenerator = () => {
                 />
 
                 <Input.TextArea
-                  maxLength={100}
+                  // maxLength={100}
                   placeholder={"Share what you are thinking..."}
                   style={{ height: 80, resize: "none", flex: 1 }}
                   value={postText}
