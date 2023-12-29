@@ -36,7 +36,8 @@ export const checkPostForTrends = (postText = "") => {
   const firstSplit = postText
     .trim()
     .split(/\s+/)
-    .filter((word) => word.startsWith("#"));
+    .filter((word) => word.startsWith("#"))
+    .map((word) => word.toLowerCase());
   let res = firstSplit;
   // 2. check if there are any words that have multiple hashtags
   firstSplit.map((word) => {
@@ -47,5 +48,7 @@ export const checkPostForTrends = (postText = "") => {
       );
     }
   });
+  // if array contains same hashtags, remove duplicates
+  res = [...new Set(res)];
   return res;
 };
