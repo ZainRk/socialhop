@@ -14,9 +14,9 @@ export const createPost = async (post) => {
     const user = await currentUser();
     if (media) {
       const res = await uploadFile(media, `/posts/${user?.id}`);
-      const { public_id, url } = res;
+      const { public_id, secure_url } = res;
       cld_id = public_id;
-      assetUrl = url;
+      assetUrl = secure_url;
     }
     const newPost = await db.post.create({
       data: {
@@ -219,13 +219,35 @@ export const createTrends = async (trends, postId) => {
   try {
     const newTrends = await db.trend.createMany({
       data: trends.map((trend) => ({
-        name: trend.toLowerCase(),
+        name: trend,
         postId: postId,
       })),
     });
-    console.log("trends created", newTrends);
     return {
       data: newTrends,
+    };
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getPopularTrends = async () => {
+  try {
+    const trends = await db.trend.groupBy({
+      by: ["name"],
+      _count: {
+        name: true,
+      },
+      orderBy: {
+        _count: {
+          name: "desc",
+        },
+      },
+      take: 3,
+    });
+    console.log("trends", trends);
+    return {
+      data: trends,
     };
   } catch (e) {
     throw e;

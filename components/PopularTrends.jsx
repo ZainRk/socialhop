@@ -3,7 +3,10 @@ import css from "@/styles/PopularTrends.module.css";
 import { Avatar, Flex, Typography } from "antd";
 import { mockTrends } from "@/mock/mockTrends";
 import Iconify from "./Iconify";
-const PopularTrends = () => {
+import { getPopularTrends } from "@/actions/post";
+import { useQuery } from "@tanstack/react-query";
+const PopularTrends = async () => {
+
   return (
     <div className={css.wrapper}>
       <div className={css.bg} />
