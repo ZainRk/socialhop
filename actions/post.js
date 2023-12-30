@@ -245,7 +245,6 @@ export const getPopularTrends = async () => {
       },
       take: 3,
     });
-    console.log("trends", trends);
     return {
       data: trends,
     };

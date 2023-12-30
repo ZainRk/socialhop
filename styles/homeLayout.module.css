@@ -1,9 +1,10 @@
 .wrapper{
-    display: flex;
-    margin-top: 72px;
     min-height: calc(100vh - 72px);
-    min-width: 100vw;
+    top: 72px;
+    position: fixed;
+    min-width: 100vw; 
     flex-direction: column;
+    overflow: hidden;
 }
 .container{
     display: flex;

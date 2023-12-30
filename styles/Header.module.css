@@ -4,6 +4,7 @@
   width: 100%;
   height: 72px;
   overflow: hidden;
+  z-index: 999;
 }
 .container {
   display: flex;
