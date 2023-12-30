@@ -10,7 +10,10 @@ const HomeLayout = ({ children }) => {
   return (
     <SettingsContextProvider>
       <ThemeProvider>
-        <Box type="baseBg">
+        <Box
+          type="baseBg"
+          style={{ position: "relative", width: "100vw", height: "100vh" }}
+        >
           <div className={css.wrapper}>
             {/* header */}
             <Header />

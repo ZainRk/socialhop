@@ -4,6 +4,7 @@ import PostGenerator from "@/components/Post/PostGenerator";
 import Posts from "@/components/Post/Posts";
 import PopularTrends from "@/components/PopularTrends";
 import FriendsSuggestion from "@/components/FriendsSuggestion";
+import { Space, Spin, Typography } from "antd";
 const HomeView = () => {
   return (
     <div className={css.wrapper}>
@@ -16,7 +17,14 @@ const HomeView = () => {
       </div>
 
       <div className={css.rightSide}>
-        <Suspense fallback={<h1 style={{color: 'red'}}>Loading Trends</h1>}>
+        <Suspense
+          fallback={
+            <Space direction="vertical">
+              <Spin />
+              <Typography className="typoH4">Loading trends...</Typography>
+            </Space>
+          }
+        >
           <PopularTrends />
         </Suspense>
 
