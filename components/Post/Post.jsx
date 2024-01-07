@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { getFileTypeFromUrl } from "@/utils";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Link from "next/link";
-const Post = ({ data }) => {
+const Post = ({ data, queryId }) => {
   return (
     <div className={css.wrapper}>
       <Box>
@@ -88,7 +88,11 @@ const Post = ({ data }) => {
           >
             {/* left side like and comment */}
             <Flex>
-              <LikeButton postId={data?.id} likes={data?.likes} />
+              <LikeButton
+                postId={data?.id}
+                likes={data?.likes}
+                queryId={queryId}
+              />
               <CommentButton comments={data?.comments?.length} />
             </Flex>
 
@@ -101,6 +105,7 @@ const Post = ({ data }) => {
             comments={data?.comments}
             expanded={false}
             postId={data?.id}
+            queryId={queryId}
           />
         </div>
       </Box>

@@ -182,6 +182,8 @@ export const updatePostLike = async (postId, type) => {
         likes: true,
       },
     });
+
+    console.log("updated post", updatedPost)
     return {
       data: updatedPost,
     };
