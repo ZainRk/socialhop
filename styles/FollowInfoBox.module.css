@@ -1,0 +1,17 @@
+.container {
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.divider {
+  position: absolute;
+  display: inline-block;
+  width: 1px;
+  height: 100%;
+  background: red;
+}

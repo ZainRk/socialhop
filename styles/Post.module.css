@@ -16,12 +16,12 @@
   height: fit-content;
   overflow: hidden;
   border-radius: 1rem;
-  background: black;
+  display: flex;
 }
 
 .media img {
   object-fit: contain;
-  max-height: 40rem;
+  border-radius: 1rem;
 }
 .media video {
   max-height: 40rem;

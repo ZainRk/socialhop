@@ -1,6 +1,9 @@
 import React from "react";
 import css from "@/styles/authLayout.module.css";
 import Image from "next/image";
+export const metadata = {
+  title: "Authentication",
+};
 const AuthLayout = ({ children }) => {
   return (
     <div className={css.wrapper}>

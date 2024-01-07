@@ -2,8 +2,8 @@
 import React from "react";
 import css from "@/styles/Post.module.css";
 import Box from "../Box";
-import { Avatar, Flex, Typography } from "antd";
-import Image from "next/image";
+import { Avatar, Flex, Image, Typography } from "antd";
+// import Image from "next/image";
 import LikeButton from "./LikeButton";
 import CommentButton from "./CommentButton";
 import ShareButton from "./ShareButton";
@@ -11,6 +11,7 @@ import CommentSection from "./CommentSection";
 import dayjs from "dayjs";
 import { getFileTypeFromUrl } from "@/utils";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Link from "next/link";
 const Post = ({ data }) => {
   return (
     <div className={css.wrapper}>
@@ -18,13 +19,23 @@ const Post = ({ data }) => {
         <div className={css.container}>
           {/* profile info */}
           <Flex gap={".5rem"} align="center">
-            <Avatar size={40} src={data?.author?.image_url} />
+            <Link
+              href={`/profile/${data?.author?.id}?person=${data?.author?.first_name}`}
+              passHref
+            >
+              <Avatar size={40} src={data?.author?.image_url} />
+            </Link>
 
             {/* name and post date */}
             <Flex vertical>
-              <Typography className="typoSubtitle2">
-                {data?.author?.first_name} {data?.author?.last_name}
-              </Typography>
+              <Link
+                href={`/profile/${data?.author?.id}?person=${data?.author?.first_name}`}
+                passHref
+              >
+                <Typography className="typoSubtitle2">
+                  {data?.author?.first_name} {data?.author?.last_name}
+                </Typography>
+              </Link>
               <Typography.Text className="typoCaption" type="secondary" strong>
                 {dayjs(data?.created_at).format("DD MMM YYYY")}
               </Typography.Text>
@@ -43,20 +54,20 @@ const Post = ({ data }) => {
           {/* media */}
           {getFileTypeFromUrl(data?.media) === "image" && (
             <div className={css.media}>
-              {/* <Image
+              <Image
+                preview={{ mask: null }}
                 src={data?.media}
                 alt="post"
                 style={{ objectFit: "cover" }}
                 fill
-              /> */}
-              <LazyLoadImage
+              />
+              {/* <LazyLoadImage
                 width={"100%"}
                 height={"100%"}
                 src={data?.media}
                 alt="post"
                 effect="blur"
-              />
-              
+              /> */}
             </div>
           )}
           {getFileTypeFromUrl(data?.media) === "video" && (

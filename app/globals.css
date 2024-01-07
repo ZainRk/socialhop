@@ -16,6 +16,7 @@ body {
   --text-color: rgba(0, 0, 0, 0.88);
   --primary-low: rgba(249, 170, 17, 0.2);
   --avatar-shadow: 0px 4px 12.5px -2px rgba(0, 0, 0, 0.25);
+  --gradient: linear-gradient(261deg, rgba(249, 170, 17, 0.00) -71.44%, #F9AA11 51.14%)
 }
 
 .cl-logoImage {

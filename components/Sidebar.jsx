@@ -6,13 +6,17 @@ import { sidebarRoutes } from "@/lib/sidebar";
 import { Typography } from "antd";
 import Iconify from "./Iconify";
 import cx from "classnames";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import SidebarContainer from "./SidebarContainer";
 import { useSettingsContext } from "@/context/settings/settings-context";
+import { useClerk, useUser } from "@clerk/nextjs";
 const Sidebar = () => {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const { signOut } = useClerk();
+  const router = useRouter();
+  const { user } = useUser();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -45,7 +49,7 @@ const Sidebar = () => {
       >
         <div className={css.wrapper}>
           <Box className={css.container}>
-            {sidebarRoutes.map((route, index) => (
+            {sidebarRoutes(user?.id).map((route, index) => (
               <Link
                 href={route.route}
                 key={index}
@@ -65,6 +69,22 @@ const Sidebar = () => {
                 </Typography>
               </Link>
             ))}
+
+            <Link
+              href={""}
+              className={cx(css.item)}
+              onClick={() => {
+                signOut(() => router.push("/sign-in"));
+              }}
+            >
+              {/* icon */}
+              <Typography>
+                <Iconify icon={"solar:logout-2-bold"} width={"20px"} />
+              </Typography>
+
+              {/* name */}
+              <Typography className="typoSubtitle2">Sign out</Typography>
+            </Link>
           </Box>
         </div>
       </SidebarContainer>

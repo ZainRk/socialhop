@@ -4,7 +4,7 @@
     position: fixed;
     min-width: 100vw; 
     flex-direction: column;
-    overflow: hidden;
+    overflow: scroll;
 }
 .container{
     display: flex;

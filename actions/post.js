@@ -45,10 +45,11 @@ export const createPost = async (post) => {
   }
 };
 
-export const getPosts = async (lastCursor) => {
+export const getPosts = async (lastCursor, id) => {
   try {
     // const { id: userId } = await currentUser();
     const take = 5;
+    const where = id !== "all" ? { author: { id } } : {};
     const posts = await db.post.findMany({
       include: {
         author: true,
@@ -59,6 +60,7 @@ export const getPosts = async (lastCursor) => {
           },
         },
       },
+      where,
       take,
       ...(lastCursor && {
         skip: 1,
@@ -84,6 +86,7 @@ export const getPosts = async (lastCursor) => {
     const cursor = lastPostInResults?.id;
 
     const morePosts = await db.post.findMany({
+      where,
       take,
       skip: 1,
       cursor: {

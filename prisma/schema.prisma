@@ -45,9 +45,14 @@ model User {
     first_name    String?
     last_name     String?
     image_url     String?
+    banner_url    String?
+    banner_id     String?
+    username      String?   @unique
     posts         Post[]
     likes         Like[]
     comments      Comment[]
+    followers     Follow[]  @relation("Follower")
+    following     Follow[]  @relation("Following")
 }
 
 model Trend {
@@ -55,4 +60,13 @@ model Trend {
     name   String
     post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId Int
+}
+
+model Follow {
+    id        Int      @id @default(autoincrement())
+    follower  User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+    followerId String
+    following User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+    followingId String
+    createdAt DateTime @default(now())
 }
