@@ -1,4 +1,4 @@
-import { getPopularTrends, getPosts } from "@/actions/post";
+import { getPosts } from "@/actions/post";
 import HomeView from "@/sections/home/view/HomeView";
 import {
   HydrationBoundary,

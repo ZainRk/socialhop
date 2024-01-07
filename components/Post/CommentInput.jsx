@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";
 
-const CommentInput = ({ postId, setExpanded }) => {
+const CommentInput = ({ postId, setExpanded, queryId }) => {
   const [value, setValue] = useState("");
   const queryClient = useQueryClient();
   const { user } = useUser();
@@ -17,13 +17,13 @@ const CommentInput = ({ postId, setExpanded }) => {
     onMutate: async () => {
       setExpanded(true);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries(["posts"]);
+      await queryClient.cancelQueries(["posts", queryId]);
 
       // Snapshot the previous value
-      const previousPosts = queryClient.getQueryData(["posts"]);
+      const previousPosts = queryClient.getQueryData(["posts", queryId]);
 
       // Optimistically update to the new value
-      queryClient.setQueryData(["posts"], (old) => {
+      queryClient.setQueryData(["posts", queryId], (old) => {
         return {
           ...old,
           pages: old.pages.map((page) => {

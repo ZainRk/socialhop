@@ -11,12 +11,11 @@ import dayjs from "dayjs";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { animateScroll } from "react-scroll";
 
-
 const EXPAND_ICONS = {
   true: "ic:outline-expand-less",
   false: "ic:outline-expand-more",
 };
-const CommentSection = ({ comments, postId }) => {
+const CommentSection = ({ comments, postId, queryId }) => {
   const [expanded, setExpanded] = useState(false);
   const [parent] = useAutoAnimate();
   useEffect(() => {
@@ -77,6 +76,7 @@ const CommentSection = ({ comments, postId }) => {
       </>
 
       <CommentInput
+        queryId={queryId}
         postId={postId}
         setExpanded={setExpanded}
       />

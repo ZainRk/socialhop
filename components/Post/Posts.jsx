@@ -60,11 +60,11 @@ const Posts = ({ id = "all" }) => {
           page?.data?.map((post, index) =>
             checkLastViewRef(index, page) ? (
               <div ref={ref} key={post?.id}>
-                <Post data={post} />
+                <Post data={post} queryId={id} />
               </div>
             ) : (
               <div key={post?.id}>
-                <Post data={post} />
+                <Post data={post} queryId={id} />
               </div>
             )
           )

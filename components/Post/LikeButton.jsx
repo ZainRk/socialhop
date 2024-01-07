@@ -8,7 +8,7 @@ import { updatePostLike } from "@/actions/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateQueryCacheLikes } from "@/utils";
 
-const LikeButton = ({ postId, likes }) => {
+const LikeButton = ({ postId, likes, queryId }) => {
   const { user } = useUser();
 
   const [isLiked, setIsLiked] = useState(false);
@@ -27,13 +27,14 @@ const LikeButton = ({ postId, likes }) => {
     // This function will be run just before the mutation function
     onMutate: async () => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries(["posts"]);
+      await queryClient.cancelQueries(["posts", queryId]);
 
       // Snapshot the previous value
-      const previousPosts = queryClient.getQueryData(["posts"]);
+      const previousPosts = queryClient.getQueryData(["posts", queryId]);
 
       // Optimistically update to the new value
-      queryClient.setQueryData(["posts"], (old) => {
+      queryClient.setQueryData(["posts", queryId], (old) => {
+        console.log(old);
         return {
           ...old,
           pages: old.pages.map((page) => {
