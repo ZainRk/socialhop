@@ -9,7 +9,7 @@ import {
 const HomePage = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", "all"],
     queryFn: ({ pageParam = "" }) => getPosts(pageParam),
     getNextPageParam: (lastPage) => {
       return lastPage?.metaData.lastCursor;
