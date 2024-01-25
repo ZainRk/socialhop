@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Box from "./Box";
 import css from "@/styles/Sidebar.module.css";
 import { sidebarRoutes } from "@/lib/sidebar";
@@ -26,12 +26,18 @@ const Sidebar = () => {
     setSettings,
   } = useSettingsContext();
 
-  const handleDrawerClose = () => {
+  const handleDrawerClose = useCallback(() => {
     setSettings((prev) => ({
       ...prev,
       isSidebarOpen: false,
     }));
-  };
+  }, [setSettings]);
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      handleDrawerClose();
+    }
+  }, [pathname, handleDrawerClose]);
 
   const isActive = (route) => {
     if (route.route === pathname) return css.active;
@@ -49,9 +55,14 @@ const Sidebar = () => {
       >
         <div className={css.wrapper}>
           <Box className={css.container}>
-            {sidebarRoutes(user?.id).map((route, index) => (
+            {sidebarRoutes(user).map((route, index) => (
               <Link
-                href={route.route}
+                // if the route is profile, then add the person query
+                href={
+                  route.route === `/profile/${user?.id}`
+                    ? `${route.route}?person=${user?.firstName}`
+                    : `${route.route}`
+                }
                 key={index}
                 className={cx(css.item, isActive(route))}
               >
