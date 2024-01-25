@@ -26,9 +26,9 @@ const Header = () => {
             className={css.logo}
           />
           {/* actions */}
-          <Flex gap={25} align="center">
+          <Flex gap={25} align="center"> 
             <ModeButton />
-            <UserButton afterSignOutUrl="/" />
+            <UserButton afterSignOutUrl="/sign-in" />
           </Flex>
         </div>
       </Box>

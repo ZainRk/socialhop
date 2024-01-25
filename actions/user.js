@@ -70,6 +70,10 @@ export const getUser = async (id) => {
       where: {
         id,
       },
+      include: {
+        followers: true,
+        following: true,
+      },
     });
     return { data: user };
   } catch (e) {
@@ -127,16 +131,24 @@ export const updateBanner = async (params) => {
   }
 };
 
-export const updateFollow = async (id, type) => {
-  console.log(id, type);
+export const updateFollow = async (params) => {
+  const { id, type } = params;
   // type = follow or unfollow, id is target user id
   try {
     const loggedInUser = await currentUser();
     if (type === "follow") {
       await db.follow.create({
         data: {
-          followerId: loggedInUser.id,
-          followingId: id,
+          follower: {
+            connect: {
+              id: loggedInUser.id,
+            },
+          },
+          following: {
+            connect: {
+              id,
+            },
+          },
         },
       });
       console.log("User followed");

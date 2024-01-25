@@ -24,16 +24,18 @@ const TABS = [
     icon: "fluent:people-20-filled",
   },
 ];
-const ProfileHead = ({ userId }) => {
+const ProfileHead = ({
+  userId,
+  data,
+  isLoading,
+  isError,
+  selectedTab,
+  setSelectedTab,
+}) => {
   const [bannerPreview, setBannerPreview] = useState(false);
   const { user } = useUser();
   const inputRef = useRef(null);
   const [banner, setBanner] = useState(null);
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUser(userId),
-  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateBanner,
@@ -158,7 +160,8 @@ const ProfileHead = ({ userId }) => {
             <div className={css.tabs}>
               <Tabs
                 centered
-                defaultActiveKey="1"
+                defaultActiveKey={selectedTab}
+                onChange={(key) => setSelectedTab(key)}
                 items={TABS.map((tab, i) => {
                   const id = String(i + 1);
                   return {

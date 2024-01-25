@@ -6,6 +6,13 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 
+export const metadata = () => {
+  return {
+    title: `Socialhop`,
+    description: `New way to feel freedom`,
+  };
+};
+
 const HomePage = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({

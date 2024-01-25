@@ -51,8 +51,8 @@ model User {
     posts         Post[]
     likes         Like[]
     comments      Comment[]
-    followers     Follow[]  @relation("Follower")
-    following     Follow[]  @relation("Following")
+    followers     Follow[]  @relation("Following")
+    following     Follow[]  @relation("Follower")
 }
 
 model Trend {
@@ -63,10 +63,10 @@ model Trend {
 }
 
 model Follow {
-    id        Int      @id @default(autoincrement())
-    follower  User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-    followerId String
-    following User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+    id          Int      @id @default(autoincrement())
+    follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+    followerId  String
+    following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
     followingId String
-    createdAt DateTime @default(now())
+    createdAt   DateTime @default(now())
 }

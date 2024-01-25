@@ -1,35 +1,45 @@
+"use client";
 import React from "react";
 import css from "@/styles/ProfileView.module.css";
 import ProfileHead from "../ProfileHead";
-import Posts from "@/components/Post/Posts";
-import FollowInfoBox from "../FollowInfoBox";
-import PostGenerator from "@/components/Post/PostGenerator";
-import FriendsSuggestion from "@/components/FriendsSuggestion";
-import { currentUser } from "@clerk/nextjs";
-import FollowButton from "../FollowButton";
-const ProfileView = async ({ userId }) => {
-  const user = await currentUser();
-  const isCurrentUser = user?.id === userId;
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/actions/user";
+import ProfileBody from "../ProfileBody";
+import FollowersBody from "../FollowersBody";
+const ProfileView = ({ userId }) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUser(userId),
+  });
+  const [selectedTab, setSelectedTab] = React.useState('1');
   return (
     <div className={css.wrapper}>
       <div className={css.container}>
         {/* head (inclued banner) */}
-        <ProfileHead userId={userId} />
+        <ProfileHead
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
+          userId={userId}
+          selectedTab={selectedTab}
+          setSelectedTab={setSelectedTab}
+        />
 
         {/* body */}
-        <div className={css.profileBody}>
-          <div className={css.left}>
-            <div className={css.sticky}>
-              {!isCurrentUser && <FollowButton id={userId} />}
-              <FollowInfoBox />
-              <FriendsSuggestion />
-            </div>
-          </div>
-          <div className={css.right}>
-            {isCurrentUser && <PostGenerator />}
-            <Posts id={userId} />
-          </div>
-        </div>
+        {selectedTab === '1' && (
+          <ProfileBody
+            userId={userId}
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+          />
+        )}
+
+        {
+          selectedTab === '2' && (
+           <FollowersBody/>
+          )
+        }
       </div>
     </div>
   );
