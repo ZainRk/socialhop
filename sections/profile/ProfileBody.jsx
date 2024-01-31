@@ -16,18 +16,13 @@ const ProfileBody = ({ userId, data, isLoading, isError }) => {
           {!isCurrentUser && (
             <FollowButton
               id={userId}
-              isLoading={isLoading}
-              isError={isError}
-              followers={data?.data?.followers.map(
-                (record) => record?.followerId
-              )}
             />
           )}
-          <FollowInfoBox
+          {/* <FollowInfoBox
             followers={data?.data?.followers}
             followings={data?.data?.following}
           />
-          <FriendsSuggestion />
+          <FriendsSuggestion /> */}
         </div>
       </div>
       <div className={css.right}>

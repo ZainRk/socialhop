@@ -26,7 +26,7 @@ const ProfileView = ({ userId }) => {
         />
 
         {/* body */}
-        {/* {selectedTab === '1' && (
+        {selectedTab === '1' && (
           <ProfileBody
             userId={userId}
             data={data}
@@ -39,7 +39,7 @@ const ProfileView = ({ userId }) => {
           selectedTab === '2' && (
            <FollowersBody/>
           )
-        } */}
+        }
       </div>
     </div>
   );
