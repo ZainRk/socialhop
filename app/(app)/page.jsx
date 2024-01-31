@@ -1,10 +1,8 @@
 import { getPosts } from "@/actions/post";
+import { getAllFollowersAndFollowings } from "@/actions/user";
 import HomeView from "@/sections/home/view/HomeView";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import { currentUser } from "@clerk/nextjs";
+import { QueryClient } from "@tanstack/react-query";
 
 export const metadata = () => {
   return {
@@ -15,6 +13,8 @@ export const metadata = () => {
 
 const HomePage = async () => {
   const queryClient = new QueryClient();
+  const user = await currentUser();
+  // get posts
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["posts", "all"],
     queryFn: ({ pageParam = "" }) => getPosts(pageParam),
@@ -23,11 +23,7 @@ const HomePage = async () => {
     },
   });
 
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <HomeView />
-    </HydrationBoundary>
-  );
+  return <HomeView />;
 };
 
 export default HomePage;
