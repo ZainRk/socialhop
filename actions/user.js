@@ -65,15 +65,27 @@ export const updateUser = async (user) => {
 };
 
 export const getUser = async (id) => {
+  console.log("user function called")
   try {
+    console.log("function called");
     const user = await db.user.findUnique({
       where: {
         id,
       },
-      include: {
-        followers: true,
-        following: true,
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email_address: true,
+        image_url: true,
+        username: true,
+        banner_url: true,
+        banner_id: true,
       },
+    });
+
+    console.log({
+      data: user,
     });
     return { data: user };
   } catch (e) {
@@ -141,12 +153,12 @@ export const updateFollow = async (params) => {
         data: {
           follower: {
             connect: {
-              id: loggedInUser.id,
+              id,
             },
           },
           following: {
             connect: {
-              id,
+              id: loggedInUser.id,
             },
           },
         },
@@ -161,6 +173,37 @@ export const updateFollow = async (params) => {
       });
       console.log("User unfollowed");
     }
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const getAllFollowersAndFollowings = async (params) => {
+  const { id } = params;
+  try {
+    const followers = await db.follow.findMany({
+      where: {
+        followingId: id,
+      },
+      include: {
+        follower: true,
+      },
+    });
+    const following = await db.follow.findMany({
+      where: {
+        followerId: id,
+      },
+      include: {
+        following: true,
+      },
+    });
+    return {
+      data: {
+        followers,
+        following,
+      },
+    };
   } catch (e) {
     console.log(e);
     throw e;
