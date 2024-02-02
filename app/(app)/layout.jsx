@@ -21,6 +21,7 @@ const HomeLayout = async ({ children }) => {
   await queryClient.prefetchQuery({
     queryKey: ["user", user?.id, "followInfo"],
     queryFn: () => getAllFollowersAndFollowings(user?.id),
+    enabled: !!user,
     // 20 mins stale time
     staleTime: 1000 * 60 * 20,
   });

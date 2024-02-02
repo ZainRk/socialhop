@@ -65,9 +65,7 @@ export const updateUser = async (user) => {
 };
 
 export const getUser = async (id) => {
-  console.log("user function called")
   try {
-    console.log("function called");
     const user = await db.user.findUnique({
       where: {
         id,
@@ -82,10 +80,6 @@ export const getUser = async (id) => {
         banner_url: true,
         banner_id: true,
       },
-    });
-
-    console.log({
-      data: user,
     });
     return { data: user };
   } catch (e) {
@@ -179,8 +173,7 @@ export const updateFollow = async (params) => {
   }
 };
 
-export const getAllFollowersAndFollowings = async (params) => {
-  const { id } = params;
+export const getAllFollowersAndFollowings = async (id) => {
   try {
     const followers = await db.follow.findMany({
       where: {
@@ -199,10 +192,8 @@ export const getAllFollowersAndFollowings = async (params) => {
       },
     });
     return {
-      data: {
         followers,
         following,
-      },
     };
   } catch (e) {
     console.log(e);

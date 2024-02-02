@@ -6,9 +6,18 @@ import FriendsSuggestion from "@/components/FriendsSuggestion";
 import PostGenerator from "@/components/Post/PostGenerator";
 import Posts from "@/components/Post/Posts";
 import { useUser } from "@clerk/nextjs";
-const ProfileBody = ({ userId, data, isLoading, isError }) => {
-  const { user } = useUser();
-  const isCurrentUser = user?.id === userId;
+import { useQuery } from "@tanstack/react-query";
+const ProfileBody = ({ userId }) => {
+  const { user: currentUser } = useUser();
+  const isCurrentUser = currentUser?.id === userId;
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user", currentUser?.id, "followInfo"],
+    queryFn: () => getAllFollowersAndFollowings(currentUser?.id),
+    enabled: !!currentUser,
+    // 20 mins stale time
+    staleTime: 1000 * 60 * 20,
+  });
   return (
     <div className={css.profileBody}>
       <div className={css.left}>
@@ -16,13 +25,20 @@ const ProfileBody = ({ userId, data, isLoading, isError }) => {
           {!isCurrentUser && (
             <FollowButton
               id={userId}
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
             />
           )}
-          {/* <FollowInfoBox
-            followers={data?.data?.followers}
-            followings={data?.data?.following}
+
+          {/* start from here */}
+          <FollowInfoBox
+            isLoading={isLoading}
+            isError={isError}
+            followers={data?.followers?.length}
+            followings={data?.following?.length}
           />
-          <FriendsSuggestion /> */}
+          <FriendsSuggestion />
         </div>
       </div>
       <div className={css.right}>

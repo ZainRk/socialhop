@@ -6,68 +6,66 @@ import { Alert, Button, Skeleton, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const FollowButton = ({ id }) => {
+const FollowButton = ({ id, data, isLoading, isError }) => {
   const [followed, setFollowed] = useState(false);
   const { user: currentUser } = useUser();
   const queryClient = useQueryClient();
-  // const state = queryClient.getQueryDefaults(['user', currentUser?.id, 'followInfo'])
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", currentUser?.id, "followInfo"],
-    queryFn: () => getAllFollowersAndFollowings(currentUser?.id),
-    // 20 mins stale time
-    staleTime: 1000 * 60 * 20,
-  });
-  // console.log(state)
+
+  // deciding the status of follow button
   useEffect(() => {
-    if (data?.followings?.includes(id)) {
+    if (data?.following?.map((person) => person?.followingId).includes(id)) {
       setFollowed(true);
     } else {
       setFollowed(false);
     }
-  }, [data, setFollowed, id]);
+  }, [data, setFollowed, id, isLoading]);
 
   const { mutate } = useMutation({
     mutationFn: updateFollow,
 
-    // onMutate: ({ type }) => {
-    //   setFollowed(!followed);
-    //   // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-    //   // profile user
-    //   queryClient.cancelQueries(["user", id, "followInfo"]);
+    onMutate: ({ type }) => {
+      setFollowed(!followed);
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      // profile user
+      queryClient.cancelQueries(["user", currentUser?.id, "followInfo"]);
 
-    //   // Snapshot the previous value
-    //   const snapShot = queryClient.getQueryData(["user", id, "followInfo"]);
+      // Snapshot the previous value
+      const snapShot = queryClient.getQueryData([
+        "user",
+        currentUser?.id,
+        "followInfo",
+      ]);
 
-    //   queryClient.setQueryData(["user", id, "followInfo"], (old) => {
-    //     return {
-    //       ...old,
-    //       data: {
-    //         ...old.data,
-    //         followers:
-    //           type === "follow"
-    //             ? [...old.data.followers, { followerId: currentUser.id }]
-    //             : old.data.followers.filter(
-    //                 (record) => record.followerId !== currentUser.id
-    //               ),
-    //       },
-    //     };
-    //   });
+      queryClient.setQueryData(
+        ["user", currentUser?.id, "followInfo"],
+        (old) => {
+          return {
+            ...old,
+            following:
+              type === "follow"
+                ? [...old.following, { followingId: id }]
+                : old.following.filter((person) => person.followingId !== id),
+          };
+        }
+      );
 
-    //   // Return a context object with the snapshotted value
-    //   return { snapShot };
-    // },
+      // Return a context object with the snapshotted value
+      return { snapShot };
+    },
 
     onError: (err, variables, context) => {
       setFollowed(!followed);
-      queryClient.setQueryData(["user", id, "followInfo"], context.snapShot);
+      queryClient.setQueryData(
+        ["user", currentUser?.id, "followInfo"],
+        context.snapShot
+      );
       toast.error("Something wrong happened. Try again!");
       console.error("Something wrong happened. Try again!", err);
     },
 
     // Always refetch after error or success:
     onSettled: () => {
-      queryClient.invalidateQueries(["user", id, "followInfo"]);
-      // queryClient.invalidateQueries(["user", user?.id]);
+      queryClient.invalidateQueries(["user", currentUser?.id, "followInfo"]);
     },
   });
 
