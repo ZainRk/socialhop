@@ -153,12 +153,12 @@ export const updateFollow = async (params) => {
         data: {
           follower: {
             connect: {
-              id,
+              id: loggedInUser.id,
             },
           },
           following: {
             connect: {
-              id: loggedInUser.id,
+              id,
             },
           },
         },

@@ -22,7 +22,7 @@ const HomeLayout = async ({ children }) => {
     queryKey: ["user", user?.id, "followInfo"],
     queryFn: () => getAllFollowersAndFollowings(user?.id),
     // 20 mins stale time
-    // staleTime: 1000 * 60 * 20,
+    staleTime: 1000 * 60 * 20,
   });
 
   return (
