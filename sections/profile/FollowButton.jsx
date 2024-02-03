@@ -28,7 +28,7 @@ const FollowButton = ({ id }) => {
     }
   }, [data, setFollowed, id, isLoading]);
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: updateFollow,
 
     onMutate: ({ type }) => {
@@ -114,14 +114,21 @@ const FollowButton = ({ id }) => {
   return (
     <Button
       type="primary"
+      disabled={isPending}
       style={{
         background: "var(--gradient)",
       }}
       onClick={() => mutate({ id, type: followed ? "unfollow" : "follow" })}
     >
-      <Typography className="typoSubtitle2" style={{ color: "white" }}>
-        {followed ? "Unfollow" : "Follow"}
-      </Typography>
+      {isPending ? (
+        <Typography className="typoSubtitle2" style={{ color: "white" }}>
+          Loading...
+        </Typography>
+      ) : (
+        <Typography className="typoSubtitle2" style={{ color: "white" }}>
+          {followed ? "Unfollow" : "Follow"}
+        </Typography>
+      )}
     </Button>
   );
 };
