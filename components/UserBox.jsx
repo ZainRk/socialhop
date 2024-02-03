@@ -1,20 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "@/styles/UserBox.module.css";
 import Box from "./Box";
 import { Avatar, Button, Flex, Typography } from "antd";
 import { Icon } from "@iconify/react";
-const UserBox = () => {
+const UserBox = ({ data, loggedInUserData }) => {
   const [followed, setFollowed] = useState(true);
+  console.log(data);
+  // deciding the status of follow button
+  useEffect(() => {
+    if (
+      loggedInUserData?.following
+        ?.map((person) => person?.followingId)
+        .includes(data?.id)
+    ) {
+      setFollowed(true);
+    } else {
+      setFollowed(false);
+    }
+  }, [loggedInUserData, setFollowed, data]);
+
   return (
     <Box className={css.container}>
       <div className={css.left}>
         <Avatar src={`/images/avatar2.png`} size={40} />
         <div className={css.details}>
           <Typography.Text className={"typoSubtitle2"}>
-            John Doe
+            {data?.follower?.first_name} {data?.follower?.last_name}
           </Typography.Text>
           <Typography.Text className={"typoCaption"} type="secondary">
-            @johndoe
+            {data?.follower?.username}
           </Typography.Text>
         </div>
       </div>

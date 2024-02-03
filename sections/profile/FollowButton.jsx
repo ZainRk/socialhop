@@ -6,10 +6,18 @@ import { Alert, Button, Skeleton, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const FollowButton = ({ id, data, isLoading, isError }) => {
+const FollowButton = ({ id }) => {
   const [followed, setFollowed] = useState(false);
   const { user: currentUser } = useUser();
   const queryClient = useQueryClient();
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user", currentUser?.id, "followInfo"],
+    queryFn: () => getAllFollowersAndFollowings(currentUser?.id),
+    enabled: !!currentUser,
+    // 20 mins stale time
+    staleTime: 1000 * 60 * 20,
+  });
 
   // deciding the status of follow button
   useEffect(() => {
@@ -27,12 +35,19 @@ const FollowButton = ({ id, data, isLoading, isError }) => {
       setFollowed(!followed);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       // profile user
+      queryClient.cancelQueries(["user", id, "followInfo"]);
+      // current user
       queryClient.cancelQueries(["user", currentUser?.id, "followInfo"]);
 
       // Snapshot the previous value
-      const snapShot = queryClient.getQueryData([
+      const snapShotOfCurrentUser = queryClient.getQueryData([
         "user",
         currentUser?.id,
+        "followInfo",
+      ]);
+      const snapShotOfProfileUser = queryClient.getQueryData([
+        "user",
+        id,
         "followInfo",
       ]);
 
@@ -49,16 +64,34 @@ const FollowButton = ({ id, data, isLoading, isError }) => {
         }
       );
 
+      queryClient.setQueryData(["user", id, "followInfo"], (old) => {
+        return {
+          ...old,
+          followers:
+            type === "follow"
+              ? [...old.followers, { followerId: currentUser?.id }]
+              : old.followers.filter(
+                  (person) => person.followerId !== currentUser?.id
+                ),
+        };
+      });
+
       // Return a context object with the snapshotted value
-      return { snapShot };
+      return { snapShotOfCurrentUser, snapShotOfProfileUser };
     },
 
     onError: (err, variables, context) => {
       setFollowed(!followed);
+
       queryClient.setQueryData(
         ["user", currentUser?.id, "followInfo"],
-        context.snapShot
+        context.snapShotOfCurrentUser
       );
+      queryClient.setQueryData(
+        ["user", id, "followInfo"],
+        context.snapShotOfProfileUser
+      );
+
       toast.error("Something wrong happened. Try again!");
       console.error("Something wrong happened. Try again!", err);
     },
@@ -66,6 +99,7 @@ const FollowButton = ({ id, data, isLoading, isError }) => {
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries(["user", currentUser?.id, "followInfo"]);
+      queryClient.invalidateQueries(["user", id, "followInfo"]);
     },
   });
 
