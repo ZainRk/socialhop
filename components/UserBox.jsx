@@ -3,15 +3,17 @@ import css from "@/styles/UserBox.module.css";
 import Box from "./Box";
 import { Avatar, Button, Flex, Typography } from "antd";
 import { Icon } from "@iconify/react";
-const UserBox = ({ data, loggedInUserData }) => {
-  const [followed, setFollowed] = useState(true);
-  console.log(data);
+import { useUser } from "@clerk/nextjs";
+const UserBox = ({ data, type, loggedInUserData }) => {
+  const [followed, setFollowed] = useState(false);
+  const { user: currentUser } = useUser();
+
   // deciding the status of follow button
   useEffect(() => {
     if (
       loggedInUserData?.following
-        ?.map((person) => person?.followingId)
-        .includes(data?.id)
+      ?.map((person) => person?.followingId)
+      .includes(data?.followingId)
     ) {
       setFollowed(true);
     } else {
@@ -22,34 +24,37 @@ const UserBox = ({ data, loggedInUserData }) => {
   return (
     <Box className={css.container}>
       <div className={css.left}>
-        <Avatar src={`/images/avatar2.png`} size={40} />
+        <Avatar src={data?.[type]?.image_url} size={40} />
         <div className={css.details}>
-          <Typography.Text className={"typoSubtitle2"}>
-            {data?.follower?.first_name} {data?.follower?.last_name}
+          <Typography.Text className={"typoSubtitle2"} ellipsis>
+            {data?.[type]?.first_name} {data?.[type]?.last_name}
           </Typography.Text>
           <Typography.Text className={"typoCaption"} type="secondary">
-            {data?.follower?.username}
+            {data?.[type]?.username}
           </Typography.Text>
         </div>
       </div>
 
-      <div className={css.right}>
-        {!followed && (
-          <Button className={css.button} type="text" size="small">
-            <Typography.Text strong>Follow</Typography.Text>
-          </Button>
-        )}
-        {followed && (
-          <Button type="text" size="small">
-            <Flex gap={10} align="center">
-              <Icon icon={"charm:tick"} width={18} color="#3db66a" />
-              <Typography.Text strong style={{ color: "#3db66a" }}>
-                Followed
-              </Typography.Text>
-            </Flex>
-          </Button>
-        )}
-      </div>
+      {data?.[type]?.id === currentUser?.id ? (
+        <div className={css.right}></div>
+      ) : (
+        <div className={css.right}>
+          {!followed ? (
+            <Button className={css.button} type="text" size="small">
+              <Typography.Text strong>Follow</Typography.Text>
+            </Button>
+          ) : (
+            <Button type="text" size="small">
+              <Flex gap={10} align="center">
+                <Icon icon={"charm:tick"} width={18} color="#3db66a" />
+                <Typography.Text strong style={{ color: "#3db66a" }}>
+                  Followed
+                </Typography.Text>
+              </Flex>
+            </Button>
+          )}
+        </div>
+      )}
     </Box>
   );
 };
