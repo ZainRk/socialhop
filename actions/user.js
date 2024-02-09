@@ -192,9 +192,39 @@ export const getAllFollowersAndFollowings = async (id) => {
       },
     });
     return {
-        followers,
-        following,
+      followers,
+      following,
     };
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const getFollowSuggestions = async () => {
+  try {
+    const loggedInUser = await currentUser();
+    const suggestions = await db.user.findMany({
+      where: {
+        AND: [
+          {
+            id: {
+              not: loggedInUser?.id,
+            },
+          },
+          {
+            followers: {
+              none: {
+                followerId: loggedInUser?.id,
+              },
+            },
+          },
+        ],
+      },
+      take: 5,
+    });
+    console.log(suggestions);
+    return suggestions;
   } catch (e) {
     console.log(e);
     throw e;

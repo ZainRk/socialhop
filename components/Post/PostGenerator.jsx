@@ -7,7 +7,6 @@ import Iconify from "../Iconify";
 import { createPost } from "@/actions/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { checkPostForTrends } from "@/utils";
 import { useUser } from "@clerk/nextjs";
 
 const PostGenerator = () => {
@@ -15,7 +14,7 @@ const PostGenerator = () => {
   const vidInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileType, setFileType] = useState(null); // [image, video]
-  const [postText, setPostText] = useState("");
+  const [postText, setPostText] = useState(null);
   const queryClient = useQueryClient();
   const { mutate: execute, isPending } = useMutation({
     mutationFn: (data) => createPost(data),
