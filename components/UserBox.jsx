@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import css from "@/styles/UserBox.module.css";
 import Box from "./Box";
@@ -8,7 +9,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateFollow } from "@/actions/user";
 import toast from "react-hot-toast";
 const UserBox = ({ data, type, loggedInUserData }) => {
-  console.log(data);
   const [followed, setFollowed] = useState(false);
   const { user: currentUser } = useUser();
   const queryClient = useQueryClient();

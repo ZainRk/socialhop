@@ -14,7 +14,6 @@ const PopularTrends = async () => {
       // stale time is 1 day
       staleTime: 1000 * 60 * 60 * 24,
     });
-    console.log(data);
     return (
       <div className={css.wrapper}>
         <div className={css.bg} />

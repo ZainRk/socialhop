@@ -221,10 +221,16 @@ export const getFollowSuggestions = async () => {
           },
         ],
       },
+      include: {
+        followers: true,
+        following: true,
+      },
       take: 5,
     });
     console.log(suggestions);
-    return suggestions;
+    return {
+      data: suggestions
+    };
   } catch (e) {
     console.log(e);
     throw e;

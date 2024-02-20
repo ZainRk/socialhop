@@ -13,7 +13,6 @@ import {
 } from "@tanstack/react-query";
 import {
   getAllFollowersAndFollowings,
-  getFollowSuggestions,
 } from "@/actions/user";
 import { currentUser } from "@clerk/nextjs";
 const HomeLayout = async ({ children }) => {
