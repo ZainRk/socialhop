@@ -204,33 +204,27 @@ export const getAllFollowersAndFollowings = async (id) => {
 export const getFollowSuggestions = async () => {
   try {
     const loggedInUser = await currentUser();
+    // Fetch all users that the given user is already following
+    const following = await db.follow.findMany({
+      where: {
+        followerId: loggedInUser?.id,
+      },
+    });
+
+    // Extract the IDs of the users that the given user is already following
+    const followingIds = following.map((follow) => follow.followingId);
+
+    // Fetch all users that the given user is not already following
     const suggestions = await db.user.findMany({
       where: {
         AND: [
-          {
-            id: {
-              not: loggedInUser?.id,
-            },
-          },
-          {
-            followers: {
-              none: {
-                followerId: loggedInUser?.id,
-              },
-            },
-          },
+          { id: { not: loggedInUser?.id } }, // Exclude the user themselves
+          { id: { notIn: followingIds } }, // Exclude users they're already following
         ],
       },
-      include: {
-        followers: true,
-        following: true,
-      },
-      take: 5,
     });
-    console.log(suggestions);
-    return {
-      data: suggestions
-    };
+
+    return suggestions;
   } catch (e) {
     console.log(e);
     throw e;

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import css from "@/styles/UserBox.module.css";
 import Box from "./Box";
@@ -38,6 +38,7 @@ const UserBox = ({ data, type, loggedInUserData }) => {
     onSettled: () => {
       queryClient.invalidateQueries(["user", currentUser?.id, "followInfo"]);
       queryClient.invalidateQueries(["user", personId, "followInfo"]);
+      queryClient.invalidateQueries(["user", "followSuggestions"]);
     },
   });
 

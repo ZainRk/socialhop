@@ -1,4 +1,4 @@
-import { getPosts } from "@/actions/post";
+import {  getMyPostsFeed } from "@/actions/post";
 import { getAllFollowersAndFollowings } from "@/actions/user";
 import HomeView from "@/sections/home/view/HomeView";
 import { currentUser } from "@clerk/nextjs";
@@ -17,7 +17,7 @@ const HomePage = async () => {
   // get posts
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["posts", "all"],
-    queryFn: ({ pageParam = "" }) => getPosts(pageParam),
+    queryFn: ({ pageParam = "" }) => getMyPostsFeed(pageParam),
     getNextPageParam: (lastPage) => {
       return lastPage?.metaData.lastCursor;
     },

@@ -1,73 +1,94 @@
+"use client";
 import React from "react";
 import Box from "./Box";
 import css from "@/styles/FollowSuggestions.module.css";
-import { Alert, Avatar, Flex, Typography } from "antd";
-import { mockFriends } from "@/mock/mockFriends";
+import { Alert, Avatar, Flex, Skeleton, Typography } from "antd";
 import UserBox from "./UserBox";
-import { getFollowSuggestions } from "@/actions/user";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-const FollowSuggestions = async () => {
-  const queryClient = new QueryClient();
-  try {
-  // const { data, isLoading, isError } = useQuery({
-  //   queryKey: ["user", "followSuggestions"],
-  //   queryFn: getFollowSuggestions,
-  //   enabled: !!user,
+import {
+  getFollowSuggestions,
+} from "@/actions/user";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
+const FollowSuggestions = () => {
+  const { user: currentUser } = useUser();
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["user", "followSuggestions"],
+    queryFn: () => getFollowSuggestions(),
+    enabled: !!currentUser,
+    staleTime: 1000 * 60 * 20,
+  });
 
-  //   staleTime: 1000 * 60 * 20,
-  // });
-
-    const { data } = await queryClient.fetchQuery({
-      queryKey: ["user", "followSuggestions"],
-      queryFn: getFollowSuggestions,
-      staleTime: 1000 * 60 * 20,
-    });
-
-    console.log(data);
-    return (
-      <div className={css.wrapper}>
-        <Box>
-          <div className={css.container}>
-            <div className={css.title}>
-              <Typography className={"typoSubtitle1"}>Follow Suggestions</Typography>
-            </div>
-
-            {/* suggestions*/}
-            {/* <Flex vertical gap={"1rem"}>
-            {mockFriends.map((person, i) => (
-              <Flex key={i} gap={"1rem"}>
-              <Avatar src={`/images/${person.img}`} size={40} />
-              
-              <Flex vertical>
-              <Text className="typoBody2" strong>
-              {person.name}
-              </Text>
-              <Text className="typoCaption" strong type="secondary">
-              Follows you
-                  </Text>
-                  </Flex>
-              </Flex>
-              ))}
-            </Flex> */}
-            {/* <UserBox />
-            <UserBox />
-            <UserBox />
-            <UserBox />
-            <UserBox /> */}
+  return (
+    <div className={css.wrapper}>
+      <Box>
+        <div className={css.container}>
+          <div className={css.title}>
+            <Typography className={"typoSubtitle1"}>
+              Follow Suggestions
+            </Typography>
           </div>
-        </Box>
-      </div>
-    );
-  } catch (e) {
-    return (
-      <Alert
-        message="Error"
-        description="Unable to fetch popular trends"
-        type="error"
-        showIcon
-      />
-    );
-  }
+
+          {isFetching && (
+            // skelton
+            <Flex vertical gap={"1rem"}>
+              {Array(3)
+                .fill(0)
+                .map((_, i) => (
+                  <Flex key={i} gap={"1rem"}>
+                    <Avatar size={40} />
+                    <Flex vertical>
+                      <Typography.Text className={"typoBody2"} strong>
+                        <Skeleton.Input active size={"small"} />
+                      </Typography.Text>
+                      <Typography.Text
+                        className={"typoCaption"}
+                        strong
+                        type="secondary"
+                      >
+                        <Skeleton.Input
+                          active
+                          size={"small"}
+                          style={{ height: ".5rem", marginTop: ".4rem" }}
+                        />
+                      </Typography.Text>
+                    </Flex>
+                  </Flex>
+                ))}
+            </Flex>
+          )}
+
+          {isError && (
+            <Alert
+              message="Error"
+              description="Something went wrong. Try again later"
+              type="error"
+              showIcon
+            />
+          )}
+
+          {/* suggestions*/}
+          {!isFetching && !isError && data?.length > 0
+            ? data?.map((user) => (
+                <UserBox
+                  loggedInUserData={currentUser}
+                  key={user.id}
+                  data={{
+                    follower: user,
+                  }}
+                  type={"follower"}
+                />
+              ))
+            : !isFetching &&
+              !isError &&
+              data?.length === 0 && (
+                <Typography.Text type="secondary">
+                  No suggestions
+                </Typography.Text>
+              )}
+        </div>
+      </Box>
+    </div>
+  );
 };
 
 export default FollowSuggestions;

@@ -3,8 +3,8 @@
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
 import { uploadFile } from "./uploadFile";
-import { revalidatePath } from "next/cache";
 import { checkPostForTrends } from "@/utils";
+import { getAllFollowersAndFollowings } from "./user";
 
 export const createPost = async (post) => {
   const { postText, media } = post;
@@ -106,6 +106,73 @@ export const getPosts = async (lastCursor, id) => {
   }
 };
 
+export const getMyPostsFeed = async (lastCursor) => {
+  try {
+    const { id } = await currentUser();
+    const { followers, following } = await getAllFollowersAndFollowings(id);
+    const followingIds = following.map((f) => f.followingId);
+    const followerIds = followers.map((f) => f.followerId);
+
+    // Combine the lists and include your own id
+    const userIds = [...new Set([...followingIds, ...followerIds, id])];
+
+    const take = 5;
+    const where = { author: { id: { in: userIds } } };
+    const posts = await db.post.findMany({
+      include: {
+        author: true,
+        likes: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
+      },
+      where,
+      take,
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (posts.length === 0) {
+      return {
+        data: [],
+        metaData: {
+          lastCursor: null,
+          hasMore: false,
+        },
+      };
+    }
+    const lastPostInResults = posts[posts.length - 1];
+    const cursor = lastPostInResults?.id;
+    const morePosts = await db.post.findMany({
+      where,
+      take,
+      skip: 1,
+      cursor: {
+        id: cursor,
+      },
+    });
+    return {
+      data: posts,
+      metaData: {
+        lastCursor: cursor,
+        hasMore: morePosts.length > 0,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    throw Error("Failed to fetch posts");
+  }
+};
+
 export const updatePostLike = async (postId, type) => {
   // type is either "like" or "unlike"
   try {
@@ -183,7 +250,7 @@ export const updatePostLike = async (postId, type) => {
       },
     });
 
-    console.log("updated post", updatedPost)
+    console.log("updated post", updatedPost);
     return {
       data: updatedPost,
     };

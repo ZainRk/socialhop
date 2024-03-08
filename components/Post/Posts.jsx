@@ -2,8 +2,8 @@
 import { Flex, Spin, Typography } from "antd";
 import React, { useEffect } from "react";
 import Post from "./Post";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getPosts } from "@/actions/post";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getMyPostsFeed, getPosts } from "@/actions/post";
 import { useInView } from "react-intersection-observer";
 
 const Posts = ({ id = "all" }) => {
@@ -21,12 +21,12 @@ const Posts = ({ id = "all" }) => {
     isFetching,
   } = useInfiniteQuery({
     queryKey: ["posts", id],
-    queryFn: ({ pageParam = "" }) => getPosts(pageParam, id),
+    queryFn: ({ pageParam = "" }) =>
+      id === "all" ? getMyPostsFeed(pageParam) : getPosts(pageParam, id),
     getNextPageParam: (lastPage) => {
       return lastPage?.metaData?.lastCursor;
     },
   });
-
   useEffect(() => {
     // if the last element is in view and there is a next page, fetch the next page
     if (inView && hasNextPage) {
