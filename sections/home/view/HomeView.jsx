@@ -10,7 +10,7 @@ const HomeView = () => {
     <div className={css.wrapper}>
       <div className={css.postsArea}>
         {/* post generator on top */}
-        <PostGenerator />
+        {/* <PostGenerator /> */}
 
         {/* posts */}
         {/* <Posts /> */}
@@ -25,10 +25,10 @@ const HomeView = () => {
             </Space>
           }
         >
-          <PopularTrends />
+          {/* <PopularTrends /> */}
         </Suspense>
 
-        <FriendsSuggestion />
+        {/* <FriendsSuggestion /> */}
       </div>
     </div>
   );
