@@ -13,7 +13,7 @@ const HomeView = () => {
         <PostGenerator />
 
         {/* posts */}
-        <Posts />
+        {/* <Posts /> */}
       </div>
 
       <div className={css.rightSide}>
