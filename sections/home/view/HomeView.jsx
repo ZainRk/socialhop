@@ -28,7 +28,7 @@ const HomeView = () => {
           <PopularTrends />
         </Suspense>
 
-        {/* <FriendsSuggestion /> */}
+        <FriendsSuggestion />
       </div>
     </div>
   );
