@@ -25,7 +25,7 @@ const HomeView = () => {
             </Space>
           }
         >
-          {/* <PopularTrends /> */}
+          <PopularTrends />
         </Suspense>
 
         {/* <FriendsSuggestion /> */}
