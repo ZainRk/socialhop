@@ -9,7 +9,7 @@ const FollowPersonsBody = ({ id, type }) => {
   const { user: currentUser } = useUser();
   const {
     data: userData,
-    isFetching: userDataLoading,
+    isLoading: userDataLoading,
     isError: userDataError,
   } = useQuery({
     queryKey: ["user", id, "followInfo"],

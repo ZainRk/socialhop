@@ -11,7 +11,7 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 const FollowSuggestions = () => {
   const { user: currentUser } = useUser();
-  const { data, isFetching, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["user", "followSuggestions"],
     queryFn: () => getFollowSuggestions(),
     enabled: !!currentUser,
@@ -28,7 +28,7 @@ const FollowSuggestions = () => {
             </Typography>
           </div>
 
-          {isFetching && (
+          {isLoading && (
             // skelton
             <Flex vertical gap={"1rem"}>
               {Array(3)
@@ -67,7 +67,7 @@ const FollowSuggestions = () => {
           )}
 
           {/* suggestions*/}
-          {!isFetching && !isError && data?.length > 0
+          {!isLoading && !isError && data?.length > 0
             ? data?.map((user) => (
                 <UserBox
                   loggedInUserData={currentUser}
@@ -78,7 +78,7 @@ const FollowSuggestions = () => {
                   type={"follower"}
                 />
               ))
-            : !isFetching &&
+            : !isLoading &&
               !isError &&
               data?.length === 0 && (
                 <Typography.Text type="secondary">
