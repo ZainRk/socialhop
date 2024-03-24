@@ -23,7 +23,6 @@ import Iconify from "../Iconify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "@/actions/post";
 const Post = ({ data, queryId }) => {
-  console.log(data);
   const { user: currentUser } = useUser();
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
