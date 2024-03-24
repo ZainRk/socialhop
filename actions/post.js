@@ -324,3 +324,29 @@ export const getPopularTrends = async () => {
     throw e;
   }
 };
+
+export const deletePost = async (postId) => {
+  try {
+    const { id: userId } = await currentUser();
+    const post = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+    if (post.authorId !== userId) {
+      return {
+        error: "You are not authorized to delete this post",
+      };
+    }
+    await db.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+    return {
+      data: "Post deleted",
+    };
+  } catch (e) {
+    throw e;
+  }
+};
